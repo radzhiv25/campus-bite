@@ -9,9 +9,8 @@ export const ROUTES = {
   menu: "/menu",
   dashboard: "/dashboard",
   admin: "/admin",
+  login: "/login",
+  signup: "/signup",
 } as const;
 
-export const NAV_LINKS = [
-  { label: "Menu", href: ROUTES.menu },
-  { label: "Admin", href: ROUTES.admin },
-] as const;
+export const NAV_LINKS = [{ label: "Menu", href: ROUTES.menu }] as const;
