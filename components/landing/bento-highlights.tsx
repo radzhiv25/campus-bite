@@ -6,6 +6,9 @@ import {
   Clock,
   CheckCircle2,
   Users,
+  Wallet,
+  BellRing,
+  Salad,
   Coffee,
   Sandwich,
   Cookie,
@@ -46,6 +49,30 @@ const HIGHLIGHTS = [
     className: "sm:col-span-2",
     featured: false,
   },
+  {
+    step: null,
+    title: "Student-friendly combos",
+    description: "Discover budget meals and combo offers made for daily canteen runs.",
+    icon: Wallet,
+    className: "",
+    featured: false,
+  },
+  {
+    step: null,
+    title: "Live prep updates",
+    description: "Get notified when your meal starts cooking and when it is ready for pickup.",
+    icon: BellRing,
+    className: "",
+    featured: false,
+  },
+  {
+    step: null,
+    title: "Healthy options made easy",
+    description: "Filter for veg, high-protein, and lighter choices between lectures and labs.",
+    icon: Salad,
+    className: "sm:col-span-2",
+    featured: false,
+  },
 ];
 
 const container = {
@@ -71,13 +98,13 @@ const ORDER_ICONS = [
 function OrderIllustration() {
   return (
     <div
-      className="absolute bottom-0 left-5 -right-5 flex h-[30%] min-h-[5rem] items-end justify-between gap-4 overflow-hidden px-2 sm:gap-6"
+      className="absolute bottom-0 left-5 -right-5 flex h-[30%] min-h-20 items-end justify-between gap-4 overflow-hidden px-2 sm:gap-6"
       aria-hidden
     >
       {ORDER_ICONS.map(({ Icon }, i) => (
         <motion.span
           key={i}
-          className="flex flex-1 basis-1 items-center justify-center text-amber-500"
+          className="flex flex-1 basis-1 items-center justify-center text-amber-500 dark:text-amber-400"
           style={{
             aspectRatio: "1",
             maxHeight: "100%",
@@ -100,10 +127,10 @@ function OrderIllustration() {
 
 export function BentoHighlights() {
   return (
-    <section className="relative z-10 border-t border-amber-200/40 bg-[#faf8f5] px-4 py-16 sm:py-20">
+    <section className="relative z-10 border-t border-border/60 bg-muted/35 px-4 py-16 dark:bg-muted/20 sm:py-20">
       <div className="mx-auto max-w-4xl">
         <motion.h2
-          className="text-center text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl"
+          className="text-center text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
@@ -112,13 +139,13 @@ export function BentoHighlights() {
           How it works
         </motion.h2>
         <motion.p
-          className="mx-auto mt-2 max-w-lg text-center text-zinc-600"
+          className="mx-auto mt-2 max-w-lg text-center text-muted-foreground"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          Three steps to skip the canteen queue
+          Order faster, eat better, and plan every canteen break
         </motion.p>
         <motion.div
           className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 sm:grid-rows-[auto_auto_auto]"
@@ -135,10 +162,10 @@ export function BentoHighlights() {
                 variants={item}
                 transition={{ duration: 0.35 }}
                 className={cn(
-                  "group relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition overflow-hidden",
+                  "group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition",
                   highlight.featured
-                    ? "min-h-[14rem] overflow-hidden border-amber-200 bg-amber-50/50 shadow-amber-100/50 hover:border-amber-300 hover:shadow-md sm:min-h-[16rem]"
-                    : "overflow-hidden border-amber-100 hover:border-amber-200 hover:shadow-md",
+                    ? "min-h-56 border-amber-200/80 bg-amber-50/70 shadow-sm dark:border-amber-900/50 dark:bg-amber-950/35 dark:shadow-none sm:min-h-64 sm:hover:border-amber-300/90 dark:sm:hover:border-amber-800/60 sm:hover:shadow-md"
+                    : "hover:border-border hover:shadow-md",
                   highlight.className
                 )}
               >
@@ -153,25 +180,25 @@ export function BentoHighlights() {
                       className={cn(
                         "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition",
                         highlight.featured
-                          ? "bg-amber-200/80 text-amber-700"
-                          : "bg-amber-100 text-amber-600 group-hover:bg-amber-200/80"
+                          ? "bg-amber-200/90 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
+                          : "bg-amber-100/90 text-amber-800 group-hover:bg-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:group-hover:bg-amber-900/45"
                       )}
                     >
                       <Icon className="h-5 w-5" strokeWidth={2} />
                     </span>
                     {highlight.step != null && (
                       <span
-                        className="rounded-full bg-zinc-200/80 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-zinc-600"
+                        className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground"
                         aria-hidden
                       >
                         Step {highlight.step}
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-3 font-semibold text-zinc-900">
+                  <h3 className="mt-3 font-semibold text-foreground">
                     {highlight.title}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-zinc-600">
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                     {highlight.description}
                   </p>
                   {highlight.featured && <OrderIllustration />}

@@ -21,7 +21,7 @@ export function Hero() {
         }}
       >
         <motion.h1
-          className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl"
+          className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl"
           variants={{
             hidden: { opacity: 0, y: 16 },
             visible: { opacity: 1, y: 0 },
@@ -29,10 +29,10 @@ export function Hero() {
           transition={{ duration: 0.4 }}
         >
           Order from your canteen.{" "}
-          <span className="text-amber-600">Skip the queue.</span>
+          <span className="text-amber-600 dark:text-amber-400">Skip the queue.</span>
         </motion.h1>
         <motion.p
-          className="mt-4 text-zinc-600"
+          className="mt-4 text-muted-foreground"
           variants={{
             hidden: { opacity: 0, y: 12 },
             visible: { opacity: 1, y: 0 },
