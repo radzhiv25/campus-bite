@@ -10,7 +10,7 @@ export default async function Home() {
       {/* Hero section: full viewport with animated icons only here */}
       <section className="relative flex h-screen flex-col overflow-hidden">
         <FoodIconsBackground contained />
-        <Navbar overlay authed={authed} displayName={displayName} />
+        <Navbar overlay showCart={false} authed={authed} displayName={displayName} />
         <Hero />
       </section>
       <BentoHighlights />
