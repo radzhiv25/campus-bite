@@ -8,7 +8,8 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 - **Email + password** sign-in and sign-up (Supabase)  
 - Protected routes via middleware; session helpers for server components  
 - **Light / dark** theme (`next-themes`) with a compact toggle in the nav and on auth screens  
-- **Floating** top navigation on scroll (fixed bar with blur and rounded shell)
+- **Floating** top navigation on scroll (fixed bar with blur and rounded shell)  
+- **Canteen menu** (`/menu`): sample dishes with **search**, **filters**, **grid or list** layout, **dish icons**, and **cart controls** (quantities sync to the nav badge and **`/cart`** review page — client state, mock catalog; no checkout API yet)
 
 ## Prerequisites
 
@@ -61,13 +62,16 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 
 | Path | Role |
 | ---- | ---- |
-| `app/` | Routes: home, menu, login, signup, dashboard, admin, `auth/callback` |
+| `app/` | Routes: home, **menu**, **cart**, login, signup, dashboard, **admin**, `auth/callback` |
 | `components/ui/` | shadcn-style primitives (Button, Input, etc.) |
 | `components/auth/` | Login/signup forms and shared auth UI |
-| `components/layout/` | Navbar, footer, theme toggle |
+| `components/layout/` | Navbar (with cart link), footer, theme toggle |
+| `components/cart/` | Cart review page UI |
 | `components/landing/` | Hero, bento, decorative backgrounds |
+| `components/menu/` | Menu browser (search, filters, grid/list) and item cards |
 | `lib/supabase/` | Browser Supabase client and env parsing |
 | `lib/auth/` | Server actions (e.g. sign out) |
+| `lib/menu/` | Menu types, mock data, filters, and price formatting (no DB yet) |
 | `lib/session.ts` | Read session for RSC / layouts |
 | `middleware.ts` | Session refresh and route protection |
 | `styles/globals.css` | Design tokens and Tailwind theme |
