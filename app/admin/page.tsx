@@ -9,15 +9,15 @@ export default async function AdminPage() {
       <Navbar authed={authed} displayName={displayName} />
       <main className="relative z-10 flex flex-1 flex-col px-4 py-8">
         <div className="mx-auto w-full max-w-4xl">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Admin
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin</h1>
           <p className="mt-1 text-muted-foreground">
-            Manage menu items, orders, and canteen settings.
+            Manage menu items, orders, and canteen settings. Database-backed tools will land here once your schema is
+            defined.
           </p>
           <section className="mt-8 rounded-2xl border border-dashed border-border bg-card p-8">
             <p className="text-sm text-muted-foreground">
-              Admin panel—add menu items and manage orders here.
+              No admin data layer is wired yet. When you add tables and policies in Supabase, connect forms and lists
+              here.
             </p>
           </section>
         </div>
