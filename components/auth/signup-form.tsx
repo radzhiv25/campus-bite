@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 
-import { SignupAuthSkeleton } from "@/components/auth/auth-form-skeleton";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -97,139 +97,126 @@ export function SignupForm() {
         </p>
       </div>
 
-      <div className="relative">
-        <div
-          className={cn(
-            "flex flex-col gap-5 transition-opacity duration-200",
-            isSubmitting && "pointer-events-none opacity-35"
-          )}
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="signup-first-name">First name</Label>
-              <Input
-                id="signup-first-name"
-                type="text"
-                autoComplete="given-name"
-                aria-invalid={Boolean(errors.firstName)}
-                className={cn(errors.firstName && "border-destructive")}
-                {...register("firstName")}
-                placeholder="Alex"
-              />
-              {errors.firstName ? (
-                <p className="text-xs text-destructive" role="alert">
-                  {errors.firstName.message}
-                </p>
-              ) : null}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="signup-last-name">Last name</Label>
-              <Input
-                id="signup-last-name"
-                type="text"
-                autoComplete="family-name"
-                aria-invalid={Boolean(errors.lastName)}
-                className={cn(errors.lastName && "border-destructive")}
-                {...register("lastName")}
-                placeholder="Rivera"
-              />
-              {errors.lastName ? (
-                <p className="text-xs text-destructive" role="alert">
-                  {errors.lastName.message}
-                </p>
-              ) : null}
-            </div>
-          </div>
+      <div className="flex flex-col gap-5">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="signup-email">Email</Label>
+            <Label htmlFor="signup-first-name">First name</Label>
             <Input
-              id="signup-email"
-              type="email"
-              autoComplete="email"
-              aria-invalid={Boolean(errors.email)}
-              className={cn(errors.email && "border-destructive")}
-              {...register("email")}
-              placeholder="you@university.edu"
+              id="signup-first-name"
+              type="text"
+              autoComplete="given-name"
+              aria-invalid={Boolean(errors.firstName)}
+              className={cn(errors.firstName && "border-destructive")}
+              {...register("firstName")}
+              placeholder="Alex"
+              disabled={isSubmitting}
             />
-            {errors.email ? (
+            {errors.firstName ? (
               <p className="text-xs text-destructive" role="alert">
-                {errors.email.message}
+                {errors.firstName.message}
               </p>
             ) : null}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="signup-password">Password</Label>
-            <PasswordInput
-              id="signup-password"
-              autoComplete="new-password"
-              aria-invalid={Boolean(errors.password)}
-              className={cn(errors.password && "border-destructive")}
-              {...register("password")}
-              placeholder="e.g. CampusR0cks"
+            <Label htmlFor="signup-last-name">Last name</Label>
+            <Input
+              id="signup-last-name"
+              type="text"
+              autoComplete="family-name"
+              aria-invalid={Boolean(errors.lastName)}
+              className={cn(errors.lastName && "border-destructive")}
+              {...register("lastName")}
+              placeholder="Rivera"
+              disabled={isSubmitting}
             />
-            {errors.password ? (
+            {errors.lastName ? (
               <p className="text-xs text-destructive" role="alert">
-                {errors.password.message}
-              </p>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                At least 8 characters, with at least one letter and one number.
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="signup-confirm-password">Confirm password</Label>
-            <PasswordInput
-              id="signup-confirm-password"
-              autoComplete="new-password"
-              aria-invalid={Boolean(errors.confirmPassword)}
-              className={cn(errors.confirmPassword && "border-destructive")}
-              {...register("confirmPassword")}
-              placeholder="Same as password"
-            />
-            {errors.confirmPassword ? (
-              <p className="text-xs text-destructive" role="alert">
-                {errors.confirmPassword.message}
+                {errors.lastName.message}
               </p>
             ) : null}
           </div>
-
-          {serverError ? (
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="signup-email">Email</Label>
+          <Input
+            id="signup-email"
+            type="email"
+            autoComplete="email"
+            aria-invalid={Boolean(errors.email)}
+            className={cn(errors.email && "border-destructive")}
+            {...register("email")}
+            placeholder="you@university.edu"
+            disabled={isSubmitting}
+          />
+          {errors.email ? (
             <p className="text-xs text-destructive" role="alert">
-              {serverError}
+              {errors.email.message}
             </p>
           ) : null}
-          {notice ? (
-            <p className="text-xs text-muted-foreground" role="status">
-              {notice}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="signup-password">Password</Label>
+          <PasswordInput
+            id="signup-password"
+            autoComplete="new-password"
+            aria-invalid={Boolean(errors.password)}
+            className={cn(errors.password && "border-destructive")}
+            {...register("password")}
+            placeholder="e.g. CampusR0cks"
+            disabled={isSubmitting}
+          />
+          {errors.password ? (
+            <p className="text-xs text-destructive" role="alert">
+              {errors.password.message}
+            </p>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              At least 8 characters, with at least one letter and one number.
+            </p>
+          )}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="signup-confirm-password">Confirm password</Label>
+          <PasswordInput
+            id="signup-confirm-password"
+            autoComplete="new-password"
+            aria-invalid={Boolean(errors.confirmPassword)}
+            className={cn(errors.confirmPassword && "border-destructive")}
+            {...register("confirmPassword")}
+            placeholder="Same as password"
+            disabled={isSubmitting}
+          />
+          {errors.confirmPassword ? (
+            <p className="text-xs text-destructive" role="alert">
+              {errors.confirmPassword.message}
             </p>
           ) : null}
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account…" : "Create account"}
-          </Button>
         </div>
 
-        {isSubmitting ? (
-          <div
-            className="absolute inset-0 z-10 flex flex-col gap-3 rounded-lg border border-border/50 bg-background/90 p-3 shadow-sm backdrop-blur-sm"
-            role="status"
-            aria-live="polite"
-          >
-            <p className="text-xs font-medium text-muted-foreground">
-              Creating your account…
-            </p>
-            <SignupAuthSkeleton />
-          </div>
+        {serverError ? (
+          <p className="text-xs text-destructive" role="alert">
+            {serverError}
+          </p>
         ) : null}
+        {notice ? (
+          <p className="text-xs text-muted-foreground" role="status">
+            {notice}
+          </p>
+        ) : null}
+
+        <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+              Creating account…
+            </>
+          ) : (
+            "Create account"
+          )}
+        </Button>
       </div>
 
-      <p
-        className={cn(
-          "text-center text-xs text-muted-foreground",
-          isSubmitting && "pointer-events-none opacity-50"
-        )}
-      >
+      <p className="text-center text-xs text-muted-foreground">
         Already have an account?{" "}
         <Link
           href={`${ROUTES.login}${from ? `?from=${encodeURIComponent(from)}` : ""}`}

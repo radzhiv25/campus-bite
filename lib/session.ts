@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 
+import { userIsAdmin } from "@/lib/admin/is-admin";
 import { createClient } from "@/lib/supabase/server";
 import { tryGetSupabasePublicEnv } from "@/lib/supabase/env";
 
@@ -25,8 +26,10 @@ export async function readCampusSession() {
   if (!tryGetSupabasePublicEnv()) {
     return {
       authed: false as const,
+      userId: null as string | null,
       email: null as string | null,
       displayName: null as string | null,
+      isAdmin: false,
     };
   }
 
@@ -37,7 +40,9 @@ export async function readCampusSession() {
 
   return {
     authed: Boolean(user),
+    userId: user?.id ?? null,
     email: user?.email ?? null,
     displayName: displayNameFromUser(user ?? null),
+    isAdmin: userIsAdmin(user ?? null),
   };
 }

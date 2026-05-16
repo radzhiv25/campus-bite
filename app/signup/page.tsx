@@ -5,6 +5,7 @@ import { AuthBrandPanel } from "@/components/auth/auth-brand-panel";
 import { SignupForm } from "@/components/auth/signup-form";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { ROUTES } from "@/constants/site";
+import { isAdminLoginFrom } from "@/lib/admin/login-context";
 import { readCampusSession } from "@/lib/session";
 
 type PageProps = {
@@ -20,9 +21,13 @@ function SignupFormFallback() {
 }
 
 export default async function SignupPage({ searchParams }: PageProps) {
+  const { from } = await searchParams;
+  if (isAdminLoginFrom(from)) {
+    redirect(`${ROUTES.login}?from=${encodeURIComponent(ROUTES.admin)}`);
+  }
+
   const { authed } = await readCampusSession();
   if (authed) {
-    const { from } = await searchParams;
     const safeFrom =
       from && from.startsWith("/") && !from.startsWith("//") ? from : ROUTES.menu;
     redirect(safeFrom);
