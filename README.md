@@ -8,12 +8,15 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 - **Email + password** sign-in and sign-up (Supabase)  
 - Protected routes via middleware; session helpers for server components  
 - **Light / dark** theme (`next-themes`) with a compact toggle in the nav and on auth screens  
-- **Floating** top navigation on scroll (fixed bar with blur and rounded shell)
+- **Floating** top navigation on scroll (fixed bar with blur and rounded shell)  
+- **Canteen menu** (`/menu`): dishes loaded from Supabase `menu_items` (public read)  
+- **Admin menu management**: users with `app_metadata.role = "admin"` can add/remove items from **Dashboard** or **`/admin`**; changes show on the menu immediately
 
 ## Prerequisites
 
 - **Node.js** 20+ (LTS recommended)  
-- A **Supabase** project with Authentication enabled (email provider)
+- A **Supabase** project with Authentication enabled (email provider)  
+- A `public.menu_items` table (and optional `profiles`) with Row Level Security matching how you deploy the app
 
 ## Setup
 
@@ -33,14 +36,30 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 
    Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (or the publishable key variant described in `.env.example`).
 
-3. **Auth redirect URL**
+3. **Database**
+
+   Create `public.menu_items` (and any profile tables you use) in Supabase with policies that match your deployment: typically **public read** on the menu and **writes restricted to admins** (for example via JWT `app_metadata.role = "admin"`). Apply the SQL in your own migration tool or the Supabase SQL editor.
+
+   For **photo uploads** from the admin “Add dish” dialog, create a **public** Storage bucket named **`menu-images`**. Add policies so everyone can **read** objects (for the public menu) and authenticated **admins** can **upload** to the `items/` path. If the bucket is missing, you can still save items using an **https://** image URL only.
+
+4. **Grant admin to your account**
+
+   In Supabase → **Authentication** → **Users** → choose your user → **Edit user** (or raw JSON) and set **App metadata** to include:
+
+   ```json
+   { "role": "admin" }
+   ```
+
+   Sign out and sign in again so the new JWT is issued. You will then see **Admin** in the nav and can manage items on **Dashboard** or **`/admin`**.
+
+5. **Auth redirect URL**
 
    In Supabase → **Authentication** → **URL Configuration** → **Redirect URLs**, add:
 
    - `http://localhost:3000/auth/callback`  
    - Your production callback URL when you deploy (same path).
 
-4. **Run the dev server**
+6. **Run the dev server**
 
    ```bash
    npm run dev
@@ -66,6 +85,9 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 | `components/auth/` | Login/signup forms and shared auth UI |
 | `components/layout/` | Navbar, footer, theme toggle |
 | `components/landing/` | Hero, bento, decorative backgrounds |
+| `components/menu/` | Public menu grid (`MenuBrowser`, `MenuItemCard`) |
+| `components/dashboard/` | Dashboard shell and admin menu tools |
+| `lib/menu/` | Menu types, Supabase queries, server actions |
 | `lib/supabase/` | Browser Supabase client and env parsing |
 | `lib/auth/` | Server actions (e.g. sign out) |
 | `lib/session.ts` | Read session for RSC / layouts |
