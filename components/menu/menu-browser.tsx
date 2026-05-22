@@ -61,7 +61,7 @@ export function MenuBrowser({ items }: MenuBrowserProps) {
         <CardContent className="py-10 text-center">
           <p className="text-sm font-medium text-foreground">No dishes on the menu yet</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            When your data source is connected, items will show here.
+            When an admin adds menu items in the dashboard, they will show here.
           </p>
           <Button variant="outline" size="sm" className="mt-6" asChild>
             <Link href={ROUTES.home}>Back home</Link>

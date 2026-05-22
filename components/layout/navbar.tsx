@@ -31,6 +31,8 @@ type NavbarProps = {
   authed?: boolean;
   /** Shown when signed in (from Supabase `user_metadata`, not email). */
   displayName?: string | null;
+  /** When true, show a link to the admin area (JWT app_metadata.role = admin). */
+  isAdmin?: boolean;
 };
 
 function isMenuRoute(pathname: string | null) {
@@ -44,6 +46,7 @@ export function Navbar({
   showCart = true,
   authed = false,
   displayName,
+  isAdmin = false,
 }: NavbarProps) {
   const pathname = usePathname();
   const onMenu = isMenuRoute(pathname);
@@ -107,6 +110,21 @@ export function Navbar({
         <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
           <ThemeToggle />
           {showCart ? <NavbarCartLink /> : null}
+          {authed ? (
+            <Button variant="outline" size="default" asChild className="hidden sm:inline-flex">
+              <Link href={ROUTES.dashboard}>Dashboard</Link>
+            </Button>
+          ) : null}
+          {isAdmin ? (
+            <Button
+              variant="outline"
+              size="default"
+              asChild
+              className="border-amber-500/40 text-amber-900 dark:border-amber-500/30 dark:text-amber-200"
+            >
+              <Link href={ROUTES.admin}>Admin</Link>
+            </Button>
+          ) : null}
           {!authed ? guestAuth : null}
           {authed ? (
             <div className="flex items-center gap-2">

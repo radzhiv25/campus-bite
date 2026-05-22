@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const PasswordInput = React.forwardRef<
   HTMLInputElement,
   Omit<React.ComponentProps<typeof Input>, "type">
->(function PasswordInput({ className, ...props }, ref) {
+>(function PasswordInput({ className, disabled, ...props }, ref) {
   const [visible, setVisible] = React.useState(false);
 
   return (
@@ -18,11 +18,13 @@ export const PasswordInput = React.forwardRef<
         ref={ref}
         type={visible ? "text" : "password"}
         className={cn("pr-10", className)}
+        disabled={disabled}
         {...props}
       />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-9 items-center justify-center">
         <button
           type="button"
+          disabled={disabled}
           className={cn(
             "pointer-events-auto flex size-7 shrink-0 items-center justify-center rounded-md bg-transparent text-muted-foreground",
             "outline-none hover:bg-transparent hover:text-foreground active:bg-transparent",

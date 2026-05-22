@@ -5,13 +5,14 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 
-import { LoginAuthSkeleton } from "@/components/auth/auth-form-skeleton";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ROUTES } from "@/constants/site";
+import { isAdminLoginFrom } from "@/lib/admin/login-context";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { type LoginFormValues, loginSchema } from "@/lib/validators/auth";
@@ -22,6 +23,8 @@ export function LoginForm() {
   const from = searchParams.get("from");
   const safeFrom =
     from && from.startsWith("/") && !from.startsWith("//") ? from : ROUTES.menu;
+
+  const adminSignInOnly = isAdminLoginFrom(from);
 
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -66,10 +69,12 @@ export function LoginForm() {
     >
       <div className="space-y-1.5">
         <h2 className="text-xl font-semibold tracking-tight text-foreground">
-          Welcome back
+          {adminSignInOnly ? "Admin sign in" : "Welcome back"}
         </h2>
         <p className="text-sm text-muted-foreground">
-          Sign in with your campus email to open the menu.
+          {adminSignInOnly
+            ? "Use the staff credentials issued for your campus. New accounts are not created here."
+            : "Sign in with your campus email to open the menu."}
         </p>
       </div>
 
@@ -87,84 +92,72 @@ export function LoginForm() {
         </p>
       ) : null}
 
-      <div className="relative">
-        <div
-          className={cn(
-            "flex flex-col gap-5 transition-opacity duration-200",
-            isSubmitting && "pointer-events-none opacity-35"
-          )}
-        >
-          <div className="space-y-2">
-            <Label htmlFor="login-email">Email</Label>
-            <Input
-              id="login-email"
-              type="email"
-              autoComplete="email"
-              aria-invalid={Boolean(errors.email)}
-              className={cn(errors.email && "border-destructive")}
-              {...register("email")}
-              placeholder="you@university.edu"
-            />
-            {errors.email ? (
-              <p className="text-xs text-destructive" role="alert">
-                {errors.email.message}
-              </p>
-            ) : null}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="login-password">Password</Label>
-            <PasswordInput
-              id="login-password"
-              autoComplete="current-password"
-              aria-invalid={Boolean(errors.password)}
-              className={cn(errors.password && "border-destructive")}
-              {...register("password")}
-              placeholder="••••••••"
-            />
-            {errors.password ? (
-              <p className="text-xs text-destructive" role="alert">
-                {errors.password.message}
-              </p>
-            ) : null}
-          </div>
-
-          {serverError ? (
+      <div className="flex flex-col gap-5">
+        <div className="space-y-2">
+          <Label htmlFor="login-email">Email</Label>
+          <Input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            aria-invalid={Boolean(errors.email)}
+            className={cn(errors.email && "border-destructive")}
+            {...register("email")}
+            placeholder="you@university.edu"
+            disabled={isSubmitting}
+          />
+          {errors.email ? (
             <p className="text-xs text-destructive" role="alert">
-              {serverError}
+              {errors.email.message}
             </p>
           ) : null}
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in…" : "Sign in"}
-          </Button>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="login-password">Password</Label>
+          <PasswordInput
+            id="login-password"
+            autoComplete="current-password"
+            aria-invalid={Boolean(errors.password)}
+            className={cn(errors.password && "border-destructive")}
+            {...register("password")}
+            placeholder="••••••••"
+            disabled={isSubmitting}
+          />
+          {errors.password ? (
+            <p className="text-xs text-destructive" role="alert">
+              {errors.password.message}
+            </p>
+          ) : null}
         </div>
 
-        {isSubmitting ? (
-          <div
-            className="absolute inset-0 z-10 flex flex-col gap-3 rounded-lg border border-border/50 bg-background/90 p-3 shadow-sm backdrop-blur-sm"
-            role="status"
-            aria-live="polite"
-          >
-            <p className="text-xs font-medium text-muted-foreground">Signing you in…</p>
-            <LoginAuthSkeleton />
-          </div>
+        {serverError ? (
+          <p className="text-xs text-destructive" role="alert">
+            {serverError}
+          </p>
         ) : null}
+
+        <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+              Signing in…
+            </>
+          ) : (
+            "Sign in"
+          )}
+        </Button>
       </div>
 
-      <p
-        className={cn(
-          "text-center text-xs text-muted-foreground",
-          isSubmitting && "pointer-events-none opacity-50"
-        )}
-      >
-        New here?{" "}
-        <Link
-          href={`${ROUTES.signup}${from ? `?from=${encodeURIComponent(from)}` : ""}`}
-          className="font-medium text-primary underline-offset-4 hover:underline"
-        >
-          Create an account
-        </Link>
-      </p>
+      {!adminSignInOnly ? (
+        <p className="text-center text-xs text-muted-foreground">
+          New here?{" "}
+          <Link
+            href={`${ROUTES.signup}${from ? `?from=${encodeURIComponent(from)}` : ""}`}
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            Create an account
+          </Link>
+        </p>
+      ) : null}
     </form>
   );
 }
