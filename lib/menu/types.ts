@@ -8,6 +8,9 @@ export type MenuItem = {
   is_available: boolean;
   sort_order: number;
   created_at: string;
+  category?: string;
+  /** Key into `getMenuItemIcon` map in `lib/menu/item-icons.tsx`. */
+  iconKey?: string;
 };
 
 export type MenuItemRow = {

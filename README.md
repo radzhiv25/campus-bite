@@ -9,7 +9,7 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 - Protected routes via middleware; session helpers for server components  
 - **Light / dark** theme (`next-themes`) with a compact toggle in the nav and on auth screens  
 - **Floating** top navigation on scroll (fixed bar with blur and rounded shell)  
-- **Canteen menu** (`/menu`): dishes loaded from Supabase `menu_items` (public read)  
+- **Canteen menu** (`/menu`): dishes from Supabase `menu_items` with **search**, **filters**, **grid or list** layout, and **cart controls** (quantities sync to the nav badge and **`/cart`** review page)  
 - **Admin menu management**: users with `app_metadata.role = "admin"` can add/remove items from **Dashboard** or **`/admin`**; changes show on the menu immediately
 
 ## Prerequisites
@@ -80,12 +80,13 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 
 | Path | Role |
 | ---- | ---- |
-| `app/` | Routes: home, menu, login, signup, dashboard, admin, `auth/callback` |
+| `app/` | Routes: home, **menu**, **cart**, login, signup, dashboard, **admin**, `auth/callback` |
 | `components/ui/` | shadcn-style primitives (Button, Input, etc.) |
 | `components/auth/` | Login/signup forms and shared auth UI |
-| `components/layout/` | Navbar, footer, theme toggle |
+| `components/layout/` | Navbar (with cart link), footer, theme toggle |
+| `components/cart/` | Cart review page UI |
 | `components/landing/` | Hero, bento, decorative backgrounds |
-| `components/menu/` | Public menu grid (`MenuBrowser`, `MenuItemCard`) |
+| `components/menu/` | Menu browser (search, filters, grid/list), item cards, cart context |
 | `components/dashboard/` | Dashboard shell and admin menu tools |
 | `lib/menu/` | Menu types, Supabase queries, server actions |
 | `lib/supabase/` | Browser Supabase client and env parsing |

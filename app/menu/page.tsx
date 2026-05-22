@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { Navbar, Footer } from "@/components/layout";
 import { MenuBrowser } from "@/components/menu";
-import Link from "next/link";
 import { ROUTES } from "@/constants/site";
 import { fetchMenuItems } from "@/lib/menu/queries";
 import { readCampusSession } from "@/lib/session";
@@ -16,8 +17,8 @@ export default async function MenuPage() {
         displayName={session.displayName}
         isAdmin={session.isAdmin}
       />
-      <main className="relative z-10 flex flex-1 flex-col px-4 py-8">
-        <div className="mx-auto w-full max-w-4xl">
+      <main className="relative z-10 flex flex-1 flex-col items-center px-4 py-8">
+        <div className="mx-auto w-full min-w-0 max-w-full md:max-w-[calc(50vw-2rem)]">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Canteen menu</h1>
           <p className="mt-1 text-muted-foreground">
             {session.authed && session.displayName ? (
@@ -39,7 +40,10 @@ export default async function MenuPage() {
           </div>
           {!session.authed ? (
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              <Link href={`${ROUTES.login}?from=${encodeURIComponent(ROUTES.menu)}`} className="font-medium text-primary underline-offset-4 hover:underline">
+              <Link
+                href={`${ROUTES.login}?from=${encodeURIComponent(ROUTES.menu)}`}
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
                 Sign in
               </Link>{" "}
               to continue with your account.

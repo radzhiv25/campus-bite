@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { UtensilsCrossed } from "lucide-react";
 import { CaretDownIcon, ForkKnifeIcon } from "@phosphor-icons/react";
 
+import { NavbarCartLink } from "@/components/layout/navbar-cart-link";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +26,8 @@ type NavbarProps = {
    * When false, a spacer keeps page content below the floating bar.
    */
   overlay?: boolean;
+  /** When false, hides the cart control (e.g. on the marketing landing page). */
+  showCart?: boolean;
   authed?: boolean;
   /** Shown when signed in (from Supabase `user_metadata`, not email). */
   displayName?: string | null;
@@ -40,6 +43,7 @@ function isMenuRoute(pathname: string | null) {
 export function Navbar({
   className,
   overlay = false,
+  showCart = true,
   authed = false,
   displayName,
   isAdmin = false,
@@ -105,13 +109,19 @@ export function Navbar({
         </Link>
         <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
           <ThemeToggle />
+          {showCart ? <NavbarCartLink /> : null}
           {authed ? (
             <Button variant="outline" size="default" asChild className="hidden sm:inline-flex">
               <Link href={ROUTES.dashboard}>Dashboard</Link>
             </Button>
           ) : null}
           {isAdmin ? (
-            <Button variant="outline" size="default" asChild className="border-amber-500/40 text-amber-900 dark:border-amber-500/30 dark:text-amber-200">
+            <Button
+              variant="outline"
+              size="default"
+              asChild
+              className="border-amber-500/40 text-amber-900 dark:border-amber-500/30 dark:text-amber-200"
+            >
               <Link href={ROUTES.admin}>Admin</Link>
             </Button>
           ) : null}
