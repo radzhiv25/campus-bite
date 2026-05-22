@@ -1,9 +1,11 @@
-"use client"
+"use client";
 
-import { ThemeProvider } from "next-themes"
+import { ThemeProvider } from "next-themes";
 
-import { Toaster } from "@/components/ui/sonner"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { CartDrawer } from "@/components/cart/cart-drawer";
+import { CartProvider } from "@/components/menu/cart-context";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,10 +15,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <TooltipProvider>
-        {children}
-        <Toaster />
-      </TooltipProvider>
+      <CartProvider>
+        <TooltipProvider>
+          {children}
+          <CartDrawer />
+          <Toaster />
+        </TooltipProvider>
+      </CartProvider>
     </ThemeProvider>
-  )
+  );
 }

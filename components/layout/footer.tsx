@@ -13,7 +13,7 @@ export function Footer({ className, variant = "landing" }: FooterProps) {
   return (
     <footer
       className={cn(
-        "border-t border-border/80 bg-background/50 py-6",
+        "border-t border-border/80 py-6",
         variant === "dashboard" && "border-border/60",
         className
       )}
