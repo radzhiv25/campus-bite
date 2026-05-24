@@ -99,6 +99,18 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 
 This repo uses prefixes such as `feat`, `fix`, `chore`, `style`, `refactor`, and `docs` for clear history.
 
+## Optional: student ID scan at signup
+
+Signup offers **Manual** or **Scan student ID** (webcam or file upload). OCR runs on the server; images are not stored.
+
+| Variable | Purpose |
+| -------- | ------- |
+| `GOOGLE_CLOUD_VISION_API_KEY` | **Recommended** — Google Cloud Vision text detection (~1,000 free units/month). Enable the Vision API and create an API key. |
+| `ID_SCAN_PROVIDER` | Optional: `google` or `tesseract`. Default: Google if the key is set, otherwise **Tesseract** (local, free, less accurate on ID photos). |
+| `ID_SCAN_FALLBACK_TESSERACT` | Optional: set to `true` to fall back to Tesseract if Google Vision fails. |
+
+Without any key, **Tesseract** is used automatically (no extra setup, slower, review fields manually).
+
 ## Deploy
 
 Deploy like any Next.js app (e.g. [Vercel](https://vercel.com)): set the same Supabase env vars and redirect URLs for your production domain.
