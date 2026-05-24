@@ -5,7 +5,7 @@ import { ROUTES, SITE } from "@/constants/site";
 
 export function AuthBrandPanel() {
   return (
-    <div className="relative flex min-h-[42vh] flex-col justify-between overflow-hidden bg-linear-to-br from-primary/90 via-primary to-primary/70 p-8 text-primary-foreground lg:min-h-dvh lg:p-12">
+    <div className="relative flex h-full min-h-[42vh] flex-col justify-between overflow-hidden bg-linear-to-br from-primary/90 via-primary to-primary/70 p-8 text-primary-foreground lg:min-h-0 lg:p-12">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.12]"
         style={{
