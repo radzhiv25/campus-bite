@@ -111,6 +111,19 @@ Signup offers **Manual** or **Scan student ID** (webcam or file upload). OCR run
 
 Without any key, **Tesseract** is used automatically (no extra setup, slower, review fields manually).
 
+## Online payments (Razorpay)
+
+Checkout supports **pay at counter** or **pay online** via [Razorpay](https://razorpay.com/). Use **Test Mode** keys from Dashboard → **API Keys** for local development.
+
+| Variable | Purpose |
+| -------- | ------- |
+| `RAZORPAY_KEY_ID` | Razorpay Key ID (test or live) — returned to the browser for Checkout |
+| `RAZORPAY_KEY_SECRET` | Secret key — server only; creates orders and verifies payment signatures |
+
+If these are unset, only pay-at-counter is offered. After placing a Razorpay order, run the SQL in `supabase/sql/orders.sql` (including `orders_update_own_razorpay_payment`) so students can mark their own payment as paid via `/api/payments/razorpay/verify`.
+
+**Test checkout:** use test keys, place an order with **Pay online**, and in the Razorpay modal use test card `4111 1111 1111 1111`, any future expiry, any CVV, and OTP `1234` (or other values shown in the Razorpay test docs).
+
 ## Deploy
 
 Deploy like any Next.js app (e.g. [Vercel](https://vercel.com)): set the same Supabase env vars and redirect URLs for your production domain.

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Navbar, Footer } from "@/components/layout";
 import { MenuBrowser } from "@/components/menu";
+import { CartCatalogSync } from "@/components/menu/cart-context";
 import { ROUTES } from "@/constants/site";
 import { fetchMenuItems } from "@/lib/menu/queries";
 import { readCampusSession } from "@/lib/session";
@@ -12,6 +13,7 @@ export default async function MenuPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#faf8f5] font-sans dark:bg-background">
+      <CartCatalogSync items={items} />
       <Navbar
         authed={session.authed}
         displayName={session.displayName}

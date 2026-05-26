@@ -1,12 +1,13 @@
 "use client";
 
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useRef, useState } from "react";
 
 import { menuPriceFieldLabel } from "@/constants/site";
-import { insertMenuItemFields } from "@/lib/menu/actions";
+import { updateMenuItemAction } from "@/lib/menu/actions";
 import { MENU_IMAGE_ACCEPT, MENU_IMAGE_MAX_BYTES } from "@/lib/menu/menu-image-storage";
+import type { MenuItem } from "@/lib/menu/types";
 import { uploadMenuItemImage } from "@/lib/menu/upload-menu-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,16 +24,25 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-export function AddMenuItemDialog() {
+function priceCentsToInput(cents: number): string {
+  return (cents / 100).toFixed(2);
+}
+
+type EditMenuItemDialogProps = {
+  item: MenuItem;
+  disabled?: boolean;
+};
+
+export function EditMenuItemDialog({ item, disabled }: EditMenuItemDialogProps) {
   const router = useRouter();
   const formId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [name, setName] = useState(item.name);
+  const [description, setDescription] = useState(item.description);
+  const [price, setPrice] = useState(priceCentsToInput(item.price_cents));
+  const [imageUrl, setImageUrl] = useState(item.image_url ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [fileLabel, setFileLabel] = useState<string | null>(null);
 
@@ -40,22 +50,22 @@ export function AddMenuItemDialog() {
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const reset = useCallback(() => {
-    setName("");
-    setDescription("");
-    setPrice("");
-    setImageUrl("");
+  const resetFromItem = useCallback(() => {
+    setName(item.name);
+    setDescription(item.description);
+    setPrice(priceCentsToInput(item.price_cents));
+    setImageUrl(item.image_url ?? "");
     setFile(null);
     setFileLabel(null);
     setError(null);
     setFieldErrors({});
     if (fileInputRef.current) fileInputRef.current.value = "";
-  }, []);
+  }, [item]);
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
-    if (!next) {
-      reset();
+    if (next) {
+      resetFromItem();
     }
   };
 
@@ -78,7 +88,7 @@ export function AddMenuItemDialog() {
         resolvedImageUrl = up.url;
       }
 
-      const result = await insertMenuItemFields({
+      const result = await updateMenuItemAction(item.id, {
         name,
         description,
         price,
@@ -97,7 +107,7 @@ export function AddMenuItemDialog() {
       }
 
       setOpen(false);
-      reset();
+      resetFromItem();
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -109,17 +119,16 @@ export function AddMenuItemDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button type="button" className="gap-2">
-          <Plus className="size-4 shrink-0" aria-hidden />
-          Add dish
+        <Button type="button" variant="outline" size="sm" disabled={disabled} className="gap-1.5">
+          <Pencil className="size-3.5 shrink-0" aria-hidden />
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[min(90vh,640px)] overflow-y-auto sm:max-w-lg" showCloseButton>
         <DialogHeader>
-          <DialogTitle>Add menu item</DialogTitle>
+          <DialogTitle>Edit menu item</DialogTitle>
           <DialogDescription>
-            Name, description, and price appear on the public menu. Optionally add a photo via upload (Supabase Storage
-            bucket <code className="rounded bg-muted px-1">menu-images</code>) or paste an HTTPS image URL.
+            Update name, description, price, or photo. Changes appear on the public menu after you save.
           </DialogDescription>
         </DialogHeader>
 
@@ -132,7 +141,6 @@ export function AddMenuItemDialog() {
               onChange={(ev) => setName(ev.target.value)}
               required
               maxLength={120}
-              placeholder="Campus bowl"
               disabled={submitting}
             />
             {fieldErrors.name ? (
@@ -150,7 +158,6 @@ export function AddMenuItemDialog() {
               onChange={(ev) => setDescription(ev.target.value)}
               rows={3}
               maxLength={2000}
-              placeholder="What’s in it, dietary notes, etc."
               disabled={submitting}
             />
             {fieldErrors.description ? (
@@ -263,7 +270,7 @@ export function AddMenuItemDialog() {
                 Saving…
               </>
             ) : (
-              "Save dish"
+              "Save changes"
             )}
           </Button>
         </DialogFooter>

@@ -25,6 +25,7 @@ export function CartDrawer() {
     isDrawerOpen,
     setDrawerOpen,
     addOne,
+    canAddMore,
     removeOne,
     removeLine,
     closeDrawer,
@@ -105,6 +106,7 @@ export function CartDrawer() {
                           variant="ghost"
                           size="icon"
                           className="size-8 rounded-sm"
+                          disabled={!canAddMore(item.id)}
                           onClick={() => addOne(item.id)}
                           aria-label="Increase quantity"
                         >
@@ -135,8 +137,17 @@ export function CartDrawer() {
                     {formatMenuPrice(subtotalCents)}
                   </span>
                 </div>
-                <Button disabled className="w-full cursor-not-allowed">
-                  Checkout (soon)
+                <Button asChild className="w-full" onClick={closeDrawer}>
+                  <Link
+                    href={`${ROUTES.login}?from=${encodeURIComponent(ROUTES.checkout)}`}
+                    className="gap-2"
+                  >
+                    Checkout
+                    <ArrowRight className="size-4" aria-hidden />
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild className="w-full" onClick={closeDrawer}>
+                  <Link href={ROUTES.cart}>Review full cart</Link>
                 </Button>
               </div>
             </>
