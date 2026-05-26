@@ -4,6 +4,7 @@ import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useRef, useState } from "react";
 
+import { menuPriceFieldLabel } from "@/constants/site";
 import { insertMenuItemFields } from "@/lib/menu/actions";
 import { MENU_IMAGE_ACCEPT, MENU_IMAGE_MAX_BYTES } from "@/lib/menu/menu-image-storage";
 import { uploadMenuItemImage } from "@/lib/menu/upload-menu-image";
@@ -160,14 +161,14 @@ export function AddMenuItemDialog() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${formId}-price`}>Price (USD)</Label>
+            <Label htmlFor={`${formId}-price`}>{menuPriceFieldLabel()}</Label>
             <Input
               id={`${formId}-price`}
               value={price}
               onChange={(ev) => setPrice(ev.target.value)}
               type="text"
               inputMode="decimal"
-              placeholder="8.99"
+              placeholder="120"
               required
               disabled={submitting}
             />

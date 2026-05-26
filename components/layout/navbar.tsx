@@ -12,9 +12,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { isAdminRoute } from "@/lib/admin/routes";
 import { SITE, ROUTES } from "@/constants/site";
 import { signOut } from "@/lib/auth/actions";
 import { cn } from "@/lib/utils";
@@ -31,7 +33,7 @@ type NavbarProps = {
   authed?: boolean;
   /** Shown when signed in (from Supabase `user_metadata`, not email). */
   displayName?: string | null;
-  /** When true, show a link to the admin area (JWT app_metadata.role = admin). */
+  /** When true, show staff tools (JWT or profiles admin). */
   isAdmin?: boolean;
 };
 
@@ -50,7 +52,11 @@ export function Navbar({
 }: NavbarProps) {
   const pathname = usePathname();
   const onMenu = isMenuRoute(pathname);
+  const onStaffRoute = isAdminRoute(pathname);
   const fromParam = encodeURIComponent(pathname || ROUTES.menu);
+
+  const showStudentCart = showCart && authed && !onStaffRoute;
+  const showStudentOrders = authed && !onStaffRoute;
 
   const guestAuth = (
     <>
@@ -109,21 +115,49 @@ export function Navbar({
         </Link>
         <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
           <ThemeToggle />
-          {showCart ? <NavbarCartLink /> : null}
-          {authed ? (
+          {showStudentCart ? <NavbarCartLink /> : null}
+          {showStudentOrders ? (
             <Button variant="outline" size="default" asChild className="hidden sm:inline-flex">
+              <Link href={ROUTES.orders}>My orders</Link>
+            </Button>
+          ) : null}
+          {authed && !onStaffRoute ? (
+            <Button variant="outline" size="default" asChild className="hidden md:inline-flex">
               <Link href={ROUTES.dashboard}>Dashboard</Link>
             </Button>
           ) : null}
           {isAdmin ? (
-            <Button
-              variant="outline"
-              size="default"
-              asChild
-              className="border-amber-500/40 text-amber-900 dark:border-amber-500/30 dark:text-amber-200"
-            >
-              <Link href={ROUTES.admin}>Admin</Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="default"
+                  className={cn(
+                    "gap-1 border-amber-500/40 text-amber-900 data-[state=open]:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-200",
+                    onStaffRoute && "border-amber-500 bg-amber-500/10"
+                  )}
+                >
+                  Staff
+                  <CaretDownIcon className="size-3.5 opacity-90" weight="bold" aria-hidden />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-44">
+                <DropdownMenuItem asChild>
+                  <Link href={ROUTES.adminOrders}>Order queue</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={ROUTES.admin}>Menu admin</Link>
+                </DropdownMenuItem>
+                {onStaffRoute ? (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href={ROUTES.menu}>Browse menu (order as customer)</Link>
+                    </DropdownMenuItem>
+                  </>
+                ) : null}
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : null}
           {!authed ? guestAuth : null}
           {authed ? (

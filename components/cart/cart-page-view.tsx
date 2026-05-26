@@ -12,8 +12,19 @@ import { ROUTES } from "@/constants/site";
 import { formatMenuPrice } from "@/lib/menu/format-price";
 import { getMenuItemIcon } from "@/lib/menu/item-icons";
 
-export function CartPageView() {
-  const { lines, addOne, removeOne, removeLine, totalQuantity, subtotalCents } = useCart();
+type CartPageViewProps = {
+  authed?: boolean;
+};
+
+function checkoutHref(authed: boolean) {
+  if (authed) {
+    return ROUTES.checkout;
+  }
+  return `${ROUTES.login}?from=${encodeURIComponent(ROUTES.checkout)}`;
+}
+
+export function CartPageView({ authed = false }: CartPageViewProps) {
+  const { lines, addOne, canAddMore, removeOne, removeLine, totalQuantity, subtotalCents } = useCart();
 
   if (lines.length === 0) {
     return (
@@ -93,6 +104,7 @@ export function CartPageView() {
                     variant="ghost"
                     size="icon"
                     className="size-9 rounded-md"
+                    disabled={!canAddMore(item.id)}
                     onClick={() => addOne(item.id)}
                     aria-label="Increase quantity"
                   >
@@ -125,8 +137,11 @@ export function CartPageView() {
             <Button variant="outline" asChild>
               <Link href={ROUTES.menu}>Add more items</Link>
             </Button>
-            <Button disabled className="cursor-not-allowed">
-              Checkout (soon)
+            <Button asChild>
+              <Link href={checkoutHref(authed)} className="gap-2">
+                Checkout
+                <ArrowRight className="size-4" aria-hidden />
+              </Link>
             </Button>
           </div>
         </CardContent>

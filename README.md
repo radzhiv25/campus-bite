@@ -99,6 +99,31 @@ Order from your campus canteen in the browser: browse the menu, sign in, and ski
 
 This repo uses prefixes such as `feat`, `fix`, `chore`, `style`, `refactor`, and `docs` for clear history.
 
+## Optional: student ID scan at signup
+
+Signup offers **Manual** or **Scan student ID** (webcam or file upload). OCR runs on the server; images are not stored.
+
+| Variable | Purpose |
+| -------- | ------- |
+| `GOOGLE_CLOUD_VISION_API_KEY` | **Recommended** — Google Cloud Vision text detection (~1,000 free units/month). Enable the Vision API and create an API key. |
+| `ID_SCAN_PROVIDER` | Optional: `google` or `tesseract`. Default: Google if the key is set, otherwise **Tesseract** (local, free, less accurate on ID photos). |
+| `ID_SCAN_FALLBACK_TESSERACT` | Optional: set to `true` to fall back to Tesseract if Google Vision fails. |
+
+Without any key, **Tesseract** is used automatically (no extra setup, slower, review fields manually).
+
+## Online payments (Razorpay)
+
+Checkout supports **pay at counter** or **pay online** via [Razorpay](https://razorpay.com/). Use **Test Mode** keys from Dashboard → **API Keys** for local development.
+
+| Variable | Purpose |
+| -------- | ------- |
+| `RAZORPAY_KEY_ID` | Razorpay Key ID (test or live) — returned to the browser for Checkout |
+| `RAZORPAY_KEY_SECRET` | Secret key — server only; creates orders and verifies payment signatures |
+
+If these are unset, only pay-at-counter is offered. After placing a Razorpay order, run the SQL in `supabase/sql/orders.sql` (including `orders_update_own_razorpay_payment`) so students can mark their own payment as paid via `/api/payments/razorpay/verify`.
+
+**Test checkout:** use test keys, place an order with **Pay online**, and in the Razorpay modal use test card `4111 1111 1111 1111`, any future expiry, any CVV, and OTP `1234` (or other values shown in the Razorpay test docs).
+
 ## Deploy
 
 Deploy like any Next.js app (e.g. [Vercel](https://vercel.com)): set the same Supabase env vars and redirect URLs for your production domain.

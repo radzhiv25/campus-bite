@@ -38,11 +38,21 @@ export async function readCampusSession() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let isAdmin = userIsAdmin(user ?? null);
+  if (!isAdmin && user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    isAdmin = profile?.role === "admin";
+  }
+
   return {
     authed: Boolean(user),
     userId: user?.id ?? null,
     email: user?.email ?? null,
     displayName: displayNameFromUser(user ?? null),
-    isAdmin: userIsAdmin(user ?? null),
+    isAdmin,
   };
 }
